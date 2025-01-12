@@ -1,0 +1,37 @@
+# General
+
+*.ini
+
+
+
+# Unity files
+
+Emergency 0/Assets/Plugins/Editor/JetBrains*
+Emergency 0/Build/
+Emergency 0/Builds/
+Emergency 0/Library/
+Emergency 0/Logs/
+Emergency 0/MemoryCaptures/
+Emergency 0/Obj/
+Emergency 0/Recordings/
+Emergency 0/Temp/
+Emergency 0/UserSettings/
+Emergency 0/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+Emergency 0/[Aa]ssets/[Ss]treamingAssets/aa.meta
+Emergency 0/[Aa]ssets/[Ss]treamingAssets/aa/*
+
+sysinfo.txt
+crashlytics-build.properties
+*.aab
+*.apk
+*.app
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.unitypackage
+*.unitypackage.meta
+
+# Visual Studio cache directory
+.vs/
+
+
