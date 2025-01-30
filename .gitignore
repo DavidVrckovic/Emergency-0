@@ -33,5 +33,6 @@ crashlytics-build.properties
 
 # Visual Studio cache directory
 .vs/
-
-
+.vscode/
+Emergency 0/Assembly-CSharp.csproj
+Emergency 0/Emergency 0.sln
