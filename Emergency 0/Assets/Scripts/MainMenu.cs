@@ -16,7 +16,19 @@ public class MainMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //* Check if Options Menu is active
+        if (optionsMenu.activeSelf)
+        {
+            //* Check for input
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                //* Hide the Options Menu
+                optionsMenu.SetActive(false);
+
+                //* Show the Main Menu
+                mainMenu.SetActive(true);
+            }
+        }
     }
 
     public void PlayGame()

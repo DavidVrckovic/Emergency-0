@@ -6,6 +6,8 @@ public class PauseMenu : MonoBehaviour
     //* Varijable za Unity
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject optionsMenu;
+    [SerializeField] GameObject deathMenu;
+    [SerializeField] GameObject activeGameUI;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -22,7 +24,7 @@ public class PauseMenu : MonoBehaviour
     public void PauseGame()
     {
         //* Check if Options Menu is active
-        if (optionsMenu.activeSelf == false)
+        if (!optionsMenu.activeSelf && !deathMenu.activeSelf)
         {
             //* Check for input & check if the game is already paused
             if (Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf == false)
@@ -32,6 +34,9 @@ public class PauseMenu : MonoBehaviour
 
                 //* Show the Pause Menu
                 pauseMenu.SetActive(true);
+
+                //* Hide the Active Game UI elements
+                activeGameUI.SetActive(false);
 
                 //* LOG
                 Debug.Log("Game paused via [Escape] key.");
@@ -43,6 +48,9 @@ public class PauseMenu : MonoBehaviour
 
                 //* Hide the Pause Menu
                 pauseMenu.SetActive(false);
+
+                //* Show the Active Game UI elements
+                activeGameUI.SetActive(true);
 
                 //* LOG
                 Debug.Log("Game unpaused via [Escape] key.");
@@ -70,6 +78,9 @@ public class PauseMenu : MonoBehaviour
 
             //* Hide the Pause Menu
             pauseMenu.SetActive(false);
+
+            //* Show the Active Game UI elements
+            activeGameUI.SetActive(true);
 
             //* LOG
             Debug.Log("Game unpaused via Continue button.");

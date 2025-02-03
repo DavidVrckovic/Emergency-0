@@ -3,41 +3,60 @@ using UnityEngine.UI;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    public float mouseSensitivity = 2;
-    public float smoothing = 2;
-    private GameObject player;
-    private Vector2 smoothedVelocity;
-    private Vector2 currentLookingPosition;
+    public float mouseSensitivityX = 400f;
+    public float mouseSensitivityY = 400f;
+
+    public Transform playerOrientation;
+
+    float cameraRotationX;
+    float cameraRotationY;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        player = transform.parent.gameObject;
+        //* Lock the cursor to the center of the screen
+        Cursor.lockState = CursorLockMode.Locked;
+
+        //* Make cursor invisible
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //* Check if the time is not frozen in a scene
-        if (Time.timeScale != 0)
+        RotateCamera();
+
+        //* Check if the time is frozen in a scene
+        if (Time.timeScale == 0)
         {
-            RotateCamera();
+            //* Lock the cursor to the center of the screen
+            Cursor.lockState = CursorLockMode.None;
+
+            //* Make cursor invisible
+            Cursor.visible = true;
         }
     }
 
     private void RotateCamera()
     {
-        Vector2 inputValue = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
+        //* Check if the time is not frozen in a scene
+        if (Time.timeScale != 0)
+        {
+            //* Get mouse input
+            float mouseInputX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * mouseSensitivityX;
+            float mouseInputY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * mouseSensitivityY;
 
-        inputValue = Vector2.Scale(inputValue, new Vector2(mouseSensitivity * smoothing, mouseSensitivity * smoothing));
+            //* Add X mouse input to Y camera rotation & subtract Y mouse input from X camera rotation
+            //* This is the way Unity handles rotations and inputs
+            cameraRotationY += mouseInputX;
+            cameraRotationX -= mouseInputY;
 
-        smoothedVelocity.x = Mathf.Lerp(smoothedVelocity.x, inputValue.x, 1f / smoothing);
-        smoothedVelocity.y = Mathf.Lerp(smoothedVelocity.y, inputValue.y, 1f / smoothing);
+            //* Do not allow the camera to go up/down more than 90deg
+            cameraRotationX = Mathf.Clamp(cameraRotationX, -90f, 90f);
 
-        currentLookingPosition += smoothedVelocity;
-
-        transform.localRotation = Quaternion.AngleAxis(-currentLookingPosition.y, Vector3.right);
-
-        player.transform.localRotation = Quaternion.AngleAxis(currentLookingPosition.x, player.transform.up);
+            //* Rotate the camera and player orientation
+            transform.rotation = Quaternion.Euler(cameraRotationX, cameraRotationY, 0);
+            playerOrientation.rotation = Quaternion.Euler(0, cameraRotationY, 0);
+        }
     }
 }
