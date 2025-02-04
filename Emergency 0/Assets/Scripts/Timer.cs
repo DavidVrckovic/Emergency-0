@@ -4,12 +4,38 @@ using TMPro;
 
 public class Timer : MonoBehaviour
 {
-    //* Varijable za Unity
-    [SerializeField] GameObject deathMenu;
-    [SerializeField] GameObject activeGameUI;
+    //* Main variables for references
+    GameObject canvas;
+    MainMenu Menu;
+    
+    void Awake()
+    {
+        // Set up the references
+        canvas = GameObject.Find("Canvas");
+        if (canvas != null)
+        {
+            Menu = canvas.GetComponent<MainMenu>();
+            if (Menu == null)
+            {
+                Debug.Log("<color=#ff0000ff>Could not find the \"MainMenu\" component on the \"" + canvas.name + "\" GameObject.</color>");
+                Debug.Break();
+            }
+        }
+        else
+        {
+            Debug.Log("<color=#ff0000ff>Could not find the \"Canvas\" GameObject.</color>");
+            Debug.Break();
+        }
+    }
+
+
+
+    //* Variables
+    [SerializeField] GameObject oxygen30percent;
+    [SerializeField] GameObject oxygen10percent;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] private Slider oxygenSlider;
-    [SerializeField] float oxygenTimer = 360f;
+    public float oxygenRemaining = 360f;
     float elapsedTime;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,28 +55,54 @@ public class Timer : MonoBehaviour
         SetOxygenLevel();
     }
 
+
+
     public void SetOxygenLevel()
     {
         //* Check if the oxygen timer has reached 0
-        if (oxygenTimer > 0)
+        if (oxygenRemaining > 0)
         {
-            oxygenTimer -= Time.deltaTime;
+            oxygenRemaining -= Time.deltaTime;
             
             //* Set the oxygen slider value
-            oxygenSlider.value = oxygenTimer;
+            oxygenSlider.value = oxygenRemaining;
+
+            if (!oxygen10percent.activeSelf && oxygenRemaining < 36)
+            {
+                oxygen30percent.SetActive(false);
+                oxygen10percent.SetActive(true);
+
+                //* LOG
+                Debug.Log("Oxygen has reached 10%.");
+            }
+            else if (oxygen10percent.activeSelf && oxygenRemaining > 36)
+            {
+                oxygen10percent.SetActive(false);
+            }
+            else if (!oxygen30percent.activeSelf && oxygenRemaining < 108)
+            {
+                oxygen30percent.SetActive(true);
+
+                //* LOG
+                Debug.Log("Oxygen has reached 30%.");
+            }
+            else if (oxygen30percent.activeSelf && oxygenRemaining > 108)
+            {
+                oxygen30percent.SetActive(false);
+            }
         }
-        else if (oxygenTimer <= 0)
+        else if (oxygenRemaining <= 0)
         {
-            oxygenTimer = 0.01f;
+            oxygenRemaining = 0.01f;
 
             //* Freeze time in a scene
             Time.timeScale = 0;
 
             //* Show the Death Menu
-            deathMenu.SetActive(true);
+            Menu.deathMenu.SetActive(true);
 
             //* Hide the Active Game UI elements
-            activeGameUI.SetActive(false);
+            Menu.activeGameUI.SetActive(false);
 
             //* LOG
             Debug.Log("Oxygen has reached 0.");

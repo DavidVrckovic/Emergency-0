@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class AudioController : MonoBehaviour
 {
-    //* Varijable za Unity
+    //* Variables
     [SerializeField] private AudioSource backgroundAudioSource;
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Toggle musicToggle;
@@ -28,6 +28,8 @@ public class AudioController : MonoBehaviour
     {
         
     }
+
+
 
     public void SetAudioVolume()
     {

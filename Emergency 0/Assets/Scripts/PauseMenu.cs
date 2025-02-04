@@ -3,11 +3,32 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    //* Varijable za Unity
-    [SerializeField] GameObject pauseMenu;
-    [SerializeField] GameObject optionsMenu;
-    [SerializeField] GameObject deathMenu;
-    [SerializeField] GameObject activeGameUI;
+    //* Main variables for references
+    GameObject canvas;
+    MainMenu Menu;
+    
+    void Awake()
+    {
+        //* Set up the references
+        canvas = GameObject.Find("Canvas");
+
+        if (canvas != null)
+        {
+            Menu = canvas.GetComponent<MainMenu>();
+            if (Menu == null)
+            {
+                Debug.Log("<color=#ff0000ff>Could not find the \"MainMenu\" component on the \"" + canvas.name + "\" GameObject.</color>");
+                Debug.Break();
+            }
+        }
+        else
+        {
+            Debug.Log("<color=#ff0000ff>Could not find the \"Canvas\" GameObject.</color>");
+            Debug.Break();
+        }
+    }
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,36 +42,38 @@ public class PauseMenu : MonoBehaviour
         PauseGame();
     }
 
+
+
     public void PauseGame()
     {
         //* Check if Options Menu is active
-        if (!optionsMenu.activeSelf && !deathMenu.activeSelf)
+        if (!Menu.optionsMenu.activeSelf && !Menu.deathMenu.activeSelf)
         {
             //* Check for input & check if the game is already paused
-            if (Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf == false)
+            if (Input.GetKeyDown(KeyCode.Escape) && Menu.pauseMenu.activeSelf == false)
             {
                 //* Freeze time in a scene
                 Time.timeScale = 0;
 
                 //* Show the Pause Menu
-                pauseMenu.SetActive(true);
+                Menu.pauseMenu.SetActive(true);
 
                 //* Hide the Active Game UI elements
-                activeGameUI.SetActive(false);
+                Menu.activeGameUI.SetActive(false);
 
                 //* LOG
                 Debug.Log("Game paused via [Escape] key.");
             }
-            else if (Input.GetKeyDown(KeyCode.Escape) && pauseMenu.activeSelf == true)
+            else if (Input.GetKeyDown(KeyCode.Escape) && Menu.pauseMenu.activeSelf == true)
             {
                 //* Unfreeze time in a scene
                 Time.timeScale = 1;
 
                 //* Hide the Pause Menu
-                pauseMenu.SetActive(false);
+                Menu.pauseMenu.SetActive(false);
 
                 //* Show the Active Game UI elements
-                activeGameUI.SetActive(true);
+                Menu.activeGameUI.SetActive(true);
 
                 //* LOG
                 Debug.Log("Game unpaused via [Escape] key.");
@@ -62,8 +85,8 @@ public class PauseMenu : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 //* Show the Pause Menu and hide the Options Menu
-                pauseMenu.SetActive(true);
-                optionsMenu.SetActive(false);
+                Menu.pauseMenu.SetActive(true);
+                Menu.optionsMenu.SetActive(false);
             }
         }
     }
@@ -71,16 +94,16 @@ public class PauseMenu : MonoBehaviour
     public void ContinueGame()
     {
         //* Check if the game is already paused
-        if (pauseMenu.activeSelf == true)
+        if (Menu.pauseMenu.activeSelf == true)
         {
             //* Unfreeze time in a scene
             Time.timeScale = 1;
 
             //* Hide the Pause Menu
-            pauseMenu.SetActive(false);
+            Menu.pauseMenu.SetActive(false);
 
             //* Show the Active Game UI elements
-            activeGameUI.SetActive(true);
+            Menu.activeGameUI.SetActive(true);
 
             //* LOG
             Debug.Log("Game unpaused via Continue button.");
