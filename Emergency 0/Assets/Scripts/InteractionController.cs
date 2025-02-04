@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
-public class OxygenPickup : MonoBehaviour
+public class InteractionController : MonoBehaviour
 {
     //* Main variables for references
     GameObject canvas;
@@ -38,19 +40,25 @@ public class OxygenPickup : MonoBehaviour
 
     
     //* Variables
-    [SerializeField] private float oxygenPickupAmount = 60f;
+    public GameObject oxygenPickupPrompt;
+    public float oxygenPickupAmount = 60f;
     private bool isInOxygenRange = false;
+
+    public GameObject generatorInteractPrompt;
+    private bool generatorEnabled = false;
+    private bool isInGeneratorRange = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        oxygenPickupPrompt.SetActive(false);
+        generatorInteractPrompt.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        PickupOxygen();
+        Interact();
     }
 
 
@@ -62,10 +70,25 @@ public class OxygenPickup : MonoBehaviour
         //* NOTE: collision.gameObject.tag returns the tag of a colliding object
         if (gameObject.CompareTag("Oxygen"))
         {
+            isInOxygenRange = true;
+
+            oxygenPickupPrompt.SetActive(true);
+
             //* LOG
             Debug.Log("Entered collision area with " + gameObject.name);
+        }
 
-            isInOxygenRange = true;
+        if (gameObject.CompareTag("Generator"))
+        {
+            if (!generatorEnabled)
+            {
+                isInGeneratorRange = true;
+
+                generatorInteractPrompt.SetActive(true);
+            }
+
+            //* LOG
+            Debug.Log("Entered collision area with " + gameObject.name);
         }
     }
 
@@ -76,16 +99,28 @@ public class OxygenPickup : MonoBehaviour
         //* NOTE: collision.gameObject.tag returns the tag of a colliding object
         if (gameObject.CompareTag("Oxygen"))
         {
+            isInOxygenRange = false;
+
+            oxygenPickupPrompt.SetActive(false);
+
             //* LOG
             Debug.Log("Exited collision area with " + gameObject.name);
+        }
 
-            isInOxygenRange = false;
+        if (gameObject.CompareTag("Generator"))
+        {
+            isInGeneratorRange = false;
+
+            generatorInteractPrompt.SetActive(false);
+
+            //* LOG
+            Debug.Log("Exited collision area with " + gameObject.name);
         }
     }
 
 
 
-    private void PickupOxygen()
+    private void Interact()
     {
         if (isInOxygenRange)
         {
@@ -100,9 +135,28 @@ public class OxygenPickup : MonoBehaviour
 
                     //* Increase the remaining oxygen
                     Timer.oxygenRemaining += oxygenPickupAmount;
+                    
+                    oxygenPickupPrompt.SetActive(false);
 
                     //* LOG
                     Debug.Log("Oxygen tank picked up.");
+                }
+            }
+        }
+
+        if (isInGeneratorRange && !generatorEnabled)
+        {
+            //* Check if Options Menu is active
+            if (!Menu.optionsMenu.activeSelf && !Menu.deathMenu.activeSelf)
+            {
+                //* Check for input & check if the game is already paused
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    generatorEnabled = true;
+                    generatorInteractPrompt.SetActive(false);
+
+                    //* LOG
+                    Debug.Log("Generator enabled.");
                 }
             }
         }

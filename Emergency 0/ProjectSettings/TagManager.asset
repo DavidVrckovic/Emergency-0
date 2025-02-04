@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Oxygen
+  - Generator
   layers:
   - Default
   - TransparentFX
