@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
 
@@ -40,10 +41,12 @@ public class InteractionController : MonoBehaviour
 
     
     //* Variables
+    [SerializeField] private AudioSource oxygenInteractionAudioSource;
     public GameObject oxygenPickupPrompt;
     public float oxygenPickupAmount = 60f;
     private bool isInOxygenRange = false;
 
+    [SerializeField] private AudioSource generatorEnabledAudioSource;
     public GameObject generatorInteractPrompt;
     private bool generatorEnabled = false;
     private bool isInGeneratorRange = false;
@@ -138,6 +141,8 @@ public class InteractionController : MonoBehaviour
                     
                     oxygenPickupPrompt.SetActive(false);
 
+                    oxygenInteractionAudioSource.Play();
+
                     //* LOG
                     Debug.Log("Oxygen tank picked up.");
                 }
@@ -154,6 +159,8 @@ public class InteractionController : MonoBehaviour
                 {
                     generatorEnabled = true;
                     generatorInteractPrompt.SetActive(false);
+
+                    generatorEnabledAudioSource.Play();
 
                     //* LOG
                     Debug.Log("Generator enabled.");

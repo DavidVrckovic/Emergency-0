@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class PlayerMovementController : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class PlayerMovementController : MonoBehaviour
     float verticalInput;
     Vector3 movementDirection;
     Rigidbody playerRigidbody;
+    
+    [SerializeField] private AudioSource stepAudioSource;
 
 
 
@@ -78,7 +81,7 @@ public class PlayerMovementController : MonoBehaviour
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
 
-        // Check if the jump key is pressed
+        //* Check if the jump key is pressed
         if (Input.GetKey(jumpKey) && readyToJump && grounded)
         {
             readyToJump = false;
@@ -90,6 +93,20 @@ public class PlayerMovementController : MonoBehaviour
 
             //* LOG
             Debug.Log("Player jump executed.");
+        }
+
+        //* Check if the WASD keys are pressed
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        {
+            stepAudioSource.enabled = true;
+            if (Input.GetKey(jumpKey) && readyToJump && grounded)
+            {
+                stepAudioSource.enabled = false;
+            }
+        }
+        else
+        {
+            stepAudioSource.enabled = false;
         }
     }
 
