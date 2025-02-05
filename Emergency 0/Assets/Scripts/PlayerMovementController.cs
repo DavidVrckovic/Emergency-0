@@ -98,10 +98,14 @@ public class PlayerMovementController : MonoBehaviour
         //* Check if the WASD keys are pressed
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
-            stepAudioSource.enabled = true;
+            
             if (Input.GetKey(jumpKey) && readyToJump && grounded)
             {
                 stepAudioSource.enabled = false;
+            }
+            else
+            {
+                stepAudioSource.enabled = true;
             }
         }
         else

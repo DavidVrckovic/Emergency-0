@@ -47,15 +47,23 @@ public class InteractionController : MonoBehaviour
     private bool isInOxygenRange = false;
 
     [SerializeField] private AudioSource generatorEnabledAudioSource;
+    public GameObject lights;
     public GameObject generatorInteractPrompt;
     private bool generatorEnabled = false;
     private bool isInGeneratorRange = false;
+    
+    public GameObject door;
+    private Animation doorOpenAnimation;
+    public GameObject doorInteractPrompt;
+    private bool doorOpened = false;
+    private bool isInDoorRange = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         oxygenPickupPrompt.SetActive(false);
         generatorInteractPrompt.SetActive(false);
+        doorInteractPrompt.SetActive(false);
     }
 
     // Update is called once per frame
@@ -93,6 +101,19 @@ public class InteractionController : MonoBehaviour
             //* LOG
             Debug.Log("Entered collision area with " + gameObject.name);
         }
+
+        if (gameObject.CompareTag("Door"))
+        {
+            if (!doorOpened)
+            {
+                isInDoorRange = true;
+
+                doorInteractPrompt.SetActive(true);
+            }
+
+            //* LOG
+            Debug.Log("Entered collision area with " + gameObject.name);
+        }
     }
 
     private void OnTriggerExit(Collider collision)
@@ -115,6 +136,16 @@ public class InteractionController : MonoBehaviour
             isInGeneratorRange = false;
 
             generatorInteractPrompt.SetActive(false);
+
+            //* LOG
+            Debug.Log("Exited collision area with " + gameObject.name);
+        }
+
+        if (gameObject.CompareTag("Door"))
+        {
+            isInDoorRange = false;
+
+            doorInteractPrompt.SetActive(false);
 
             //* LOG
             Debug.Log("Exited collision area with " + gameObject.name);
@@ -159,11 +190,31 @@ public class InteractionController : MonoBehaviour
                 {
                     generatorEnabled = true;
                     generatorInteractPrompt.SetActive(false);
+                    lights.SetActive(true);
 
                     generatorEnabledAudioSource.Play();
 
                     //* LOG
                     Debug.Log("Generator enabled.");
+                }
+            }
+        }
+
+        if (isInDoorRange && !doorOpened)
+        {
+            //* Check if Options Menu is active
+            if (!Menu.optionsMenu.activeSelf && !Menu.deathMenu.activeSelf)
+            {
+                //* Check for input & check if the game is already paused
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    doorOpened = true;
+                    doorInteractPrompt.SetActive(false);
+
+                    door.SetActive(false);
+
+                    //* LOG
+                    Debug.Log("Door opened.");
                 }
             }
         }
