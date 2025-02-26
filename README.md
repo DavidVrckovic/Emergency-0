@@ -3,5 +3,5 @@ A game project made in Unity for the Game Development course at Zagreb Universit
 <br><br>
 
 ### Project info
-- Unity Editor version: 6000.0.26f1
-- Blender version: 4.3.2
+- Unity Editor version: **6000.0.26f1**
+- Blender version: **4.3.2**
